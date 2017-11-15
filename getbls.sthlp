@@ -17,7 +17,7 @@
 
 {p 8 16 2}
 {cmd:getbls}
-{series_list}
+[series_list]
 [{cmd:,} {it:options}]
 
 
