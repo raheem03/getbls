@@ -7,12 +7,13 @@ version 14.0
     syntax anything(id="Series ID(s)" name=serieslist)[, key(string) years(string) states(string) saveas(string) clear]
 
     * Check for dependencies
-        foreach program in libjson insheetjson {
+        foreach program in libjson.mlib insheetjson.ado {
             capture which `program'
             if _rc    {
                 display _newline(1)
                 display as result "You don't have `program' installed. Enter -yes- to install or any other key to abort." _request(_y)
-                if "`y'"=="yes" ssc install `program'
+                local program = substr("`program'", 1, strpos("`program'", ".")-1)
+                if "`y'"=="yes" ssc install "`program'"
                 else {
                     display as error "`program' not installed. To use getbls, first install `program' by typing -ssc install `program'-."
                     quietly exit 601
