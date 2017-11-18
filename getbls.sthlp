@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 1.0.1  14nov2017}{...}
+{* *! version 1.0.2  18nov2017}{...}
 {viewerjumpto "Syntax" "test##syntax"}{...}
 {viewerjumpto "Menu" "test##menu"}{...}
 {viewerjumpto "Description" "test##description"}{...}
@@ -8,7 +8,7 @@
 {title:Title}
 
 {p2colset 5 20 22 2}{...}
-{p2col:{bf: getbls} {hline 2}}Imports BLS tables to memory.{p_end}
+{p2col:{bf: getbls} {hline 2}}Imports Bureau of Labor Statistics tables to memory.{p_end}
 {p2colreset}{...}
 
 
@@ -17,7 +17,7 @@
 
 {p 8 16 2}
 {cmd:getbls}
-[series_list]
+{series_list}
 [{cmd:,} {it:options}]
 
 
@@ -37,14 +37,37 @@
 {title:Description}
 
 {pstd}
-{opt getbls} accesses BLS tables and import them into memory. The API can return up to 10 years of data.
+{opt getbls} accesses Bureau of Labor Statistics tables and import them into memory. The API can return up to 10 years of data.
 
 {pstd}
 You can pass as many table IDs as necessary. Though, keep in mind that if you'd like state tables,
 you should use the % symbol where the state FIPS would go within the ID. E.g., SMU01000000500000011
 has weekly hours worked in Alabama while SMU02000000500000011 has weekly hours worked in Alaska.
 To get these data,simply pass SMU%000000500000011 and pass their FIPS codes (01 and 02, respectively)
-to the {bf: states} option. 
+to the {bf: states} option.
+
+Below are some common national and state tables.
+
+{marker nattab}{...}
+{synoptset 30}{...}
+{synopt:{space 4}{it:National Table ID}}Concept{p_end}
+{space 4}{synoptline}
+{synopt:{space 4}{opt CES0000000001}} Total employees, thousands {p_end}
+{synopt:{space 4}{opt LNS14000000}} Unemployment rate {p_end}
+{synopt:{space 4}{opt CEU0500000002}} Average weekly hours, all {p_end}
+{synopt:{space 4}{opt CEU0500000003}} Average hourly earnings, all {p_end}
+{synopt:{space 4}{opt CEU0500000011}} Average weekly wages, all {p_end}
+{synopt:{space 4}{opt CUSR0000SA0}} CPI, all urban customers {p_end}
+
+{marker stattab}{...}
+{synoptset 30}{...}
+{synopt:{space 4}{it:State Table ID}}Concept{p_end}
+{space 4}{synoptline}
+{synopt:{space 4}{opt SMS%000000000000001}} Total non-farm employment, thousands {p_end}
+{synopt:{space 4}{opt LASST%0000000000003}} Unemployment rate  {p_end}
+{synopt:{space 4}{opt SMU%000000500000002}} Average weekly hours, all {p_end}
+{synopt:{space 4}{opt SMU%000000500000003}} Average hourly earnings, all {p_end}
+{synopt:{space 4}{opt SMU%000000500000011}} Average weekly earnings, all {p_end}
 
 {marker options}{...}
 {title:Options}
@@ -52,15 +75,19 @@ to the {bf: states} option.
 {dlgtab:Main}
 
 {phang}
-{opth key(string)} To access BLS' API, BLS requires that you download a key. You can download the key {browse "here":https://data.bls.gov/registrationEngine/}. You can avoid passing this every time if you add {bf: global blskey YOURKEY} to your profile.do.
+{opth key(string)}  To access BLS' API, BLS requires that you download a key. You can download the key {browse "here":https://data.bls.gov/registrationEngine/}. 
+You can avoid passing this every time if you add {bf: global blskey YOURKEY} to your profile.do.
+
 
 {phang}
-{opth years(year_list)} You can pass a year or list of years, separated by a "-" or "/". Default is current year. BLS' API only allows you to select a range, so {cmd: getbls} will take the maximum and minimum from this range and pass those to BLS.
+{opth years(year_list)} You can pass a year or list of years, separated by a "-" or "/". Default is current year. BLS' API only allows you to select a range, 
+so {cmd: getbls} will take the maximum and minimum from this range and pass those to BLS.
 
 {dlgtab:Options}
 
 {phang}
-{opt states} You can pass a state FIPS code or series of state FIPS codes. You can get all states by passing an asterisk (*). Remember: when passing series IDs for state tables, pass a "%" where the state FIPS would go (e.g., SMU%000000500000011)
+{opt states} You can pass a state FIPS code or series of state FIPS codes. You can get all states by passing an asterisk (*). 
+Remember: when passing series IDs for state tables, pass a "%" where the state FIPS would go (e.g., SMU%000000500000011)
 
 {phang}
 {opt saveas(string)} Saves imported dataset to memory with filename passed to this option.
