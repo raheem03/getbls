@@ -43,7 +43,7 @@ version 14.0
             local stop = `i' - 1
             if `stop' < `start' & `stop' - `start' != -1 {
                 dis as error "Make sure to pass larger years first if separating with delimiter (/ or -)"
-                exit 4
+                exit
             }
             
             forvalues j = `start'/`stop' {
