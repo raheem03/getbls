@@ -1,4 +1,12 @@
-*! v.1.0.2 18nov2017, Raheem Chaudhry
+*! v.1.0.3  
+
+* v.1.0.3   28jun2018   Raheem Chaudhry
+* v.1.0.2   18nov2017   Raheem Chaudhry
+
+/*
+v.1.0.3
+    Correctly download dependencies
+*/
 
 cap program drop getbls
 program define getbls
@@ -7,13 +15,13 @@ version 14.0
     syntax anything(id="Series ID(s)" name=serieslist)[, key(string) years(string) STates(string) SAVEas(string) clear]
 
     * Check for dependencies
-    foreach program in libjson.mlib insheetjson.ado {
+    foreach program in libjson insheetjson {
         capture which `program'
         if _rc    {
             display _newline(1)
             display as result "You don't have `program' installed. Enter -yes- to install or any other key to abort." _request(_y)
             local program = substr("`program'", 1, strpos("`program'", ".")-1)
-            if "`y'"=="yes" ssc install "`program'"
+            if "`y'"=="yes" ssc install "`program'", replace
             else {
                 display as error "`program' not installed. To use getbls, first install `program' by typing -ssc install `program'-."
                 qui exit 601
@@ -80,6 +88,7 @@ version 14.0
     if "`key'" == "" local key "$blskey"
     if "`key'" == "" {
         dis as err "Must pass BLS key. To acquire, register here: https://data.bls.gov/registrationEngine/. To avoid passing each time, set global blskey to your key in your profile.do. Type -help getBLS- for details."
+        exit 672
     }
 
     * Error handling
@@ -93,17 +102,18 @@ version 14.0
         clear
     }
     
+    /*
     foreach year in `firstyr' `secondyr' {
         if `year' < `curryear' - 10 {
             dis as err "BLS API only provides data for last 10 years."
-            exit
+            exit 672
         }
     }
-    
+    */
     foreach year in `firstyr' `secondyr' {
         if `year' > `curryear' {
             dis as err "Data for `year' have not been released yet."
-            exit
+            exit 672
         }
     }
 
@@ -119,11 +129,12 @@ version 14.0
             local geos "us"
         }
         
+        // dis "`geos'"
         foreach geo in `geos' {
-            local series = subinstr("`series'", "%", "`geo'", .)
+            local currentseries = subinstr("`series'", "%", "`geo'", .)
             local ++i
             qui clear
-            local APICall "https://api.bls.gov/publicAPI/v2/timeseries/data/`series'?registrationkey=`key'&catalog=true&startyear=`firstyr'&endyear=`secondyr'"
+            local APICall "https://api.bls.gov/publicAPI/v2/timeseries/data/`currentseries'?registrationkey=`key'&catalog=true&startyear=`firstyr'&endyear=`secondyr'"
             tempfile jsontree
             qui copy "`APICall'" "`jsontree'"
             qui import delimited "`jsontree'", delimiter("\n", asstring) varnames(nonames) clear 
