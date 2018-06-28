@@ -1,7 +1,7 @@
 d 'getbls': package to access Bureau of Labor Statistics API
 d Requires: Stata version 14
 d
-d Distribution-Date: 20171114
+d Distribution-Date: 20180628
 d
 d Author: Raheem Chaudhry
 d Support: email rchaudhry03@gmail.com
