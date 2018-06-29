@@ -15,7 +15,7 @@ version 14.0
     syntax anything(id="Series ID(s)" name=serieslist)[, key(string) years(string) STates(string) SAVEas(string) clear]
 
     * Check for dependencies
-    foreach program in libjson insheetjson {
+    foreach program in libjson.mlib insheetjson.ado {
         capture which `program'
         if _rc    {
             display _newline(1)
